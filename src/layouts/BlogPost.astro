@@ -7,49 +7,99 @@ import FormattedDate from '../components/FormattedDate.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, date, updatedDate, heroImage } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+			/* --- 延续 Apple 风格的全局样式 --- */
+			body {
+				background-color: #f5f5f7;
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
+
+			/* --- 主要内容容器 --- */
+			.content-wrapper {
+				max-width: 800px; /* 为正文提供一个舒适的阅读宽度 */
 				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
+				padding: 4rem 1rem;
 			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
+			
+			.post-header {
 				text-align: center;
-				line-height: 1;
+				margin-bottom: 3rem;
 			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
+
+			.post-header .title {
+				font-size: 3rem;
+				font-weight: 700;
+				line-height: 1.2;
+				color: #1d1d1f;
+				margin: 0 0 1rem 0;
 			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+
+			.post-header .date {
+				font-size: 1rem;
+				color: #6e6e73;
 			}
-			.last-updated-on {
+
+			.hero-image {
+				margin-bottom: 3rem;
+			}
+
+			.hero-image img {
+				width: 100%;
+				border-radius: 18px; /* 与卡片一致的圆角 */
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+			}
+
+			/* --- 正文排版样式 (Prose) --- */
+			.prose {
+				color: #1d1d1f;
+				line-height: 1.7;
+			}
+			.prose h1, .prose h2, .prose h3, .prose h4 {
+				margin: 2.5rem 0 1rem 0;
+				font-weight: 600;
+			}
+			.prose p {
+				margin-bottom: 1.25rem;
+				font-size: 1.125rem;
+			}
+			.prose a {
+				color: var(--accent);
+			}
+			.prose ul, .prose ol {
+				padding-left: 1.5rem;
+				margin-bottom: 1.25rem;
+			}
+			.prose li > p { /* 修复列表项内段落的间距 */
+				margin-bottom: 0.5rem;
+			}
+			.prose blockquote {
+				border-left: 3px solid var(--accent);
+				padding-left: 1rem;
 				font-style: italic;
+				color: #6e6e73;
+			}
+			.prose code {
+				font-size: 0.9em;
+			}
+			.prose pre {
+				background-color: #f5f5f7;
+				border: 1px solid rgba(0, 0, 0, 0.05);
+			}
+
+			/* --- 响应式设计 --- */
+			@media (max-width: 720px) {
+				.post-header .title {
+					font-size: 2.25rem;
+				}
+				.prose p {
+					font-size: 1rem;
+				}
 			}
 		</style>
 	</head>
@@ -57,26 +107,27 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 	<body>
 		<Header />
 		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+			<article class="content-wrapper">
+				<header class="post-header">
+					<h1 class="title">{title}</h1>
+					<div class="date">
+						<FormattedDate date={date} />
+						{updatedDate && (
+							<div class="last-updated-on">
+								(Last updated on <FormattedDate date={updatedDate} />)
+							</div>
+						)}
 					</div>
-					<slot />
+				</header>
+
+				{heroImage && (
+					<div class="hero-image">
+						<img src={heroImage} alt="" />
+					</div>
+				)}
+				
+				<div class="prose">
+					<slot /> <!-- 你文章的 Markdown 内容会在这里渲染 -->
 				</div>
 			</article>
 		</main>

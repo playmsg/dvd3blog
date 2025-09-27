@@ -5,10 +5,12 @@ import sitemap from "@astrojs/sitemap";
 
 import cloudflare from "@astrojs/cloudflare";
 
+import playformCompress from "@playform/compress";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://dvd3.net",
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap(), playformCompress()],
   adapter: cloudflare({
     platformProxy: {
       enabled: true,

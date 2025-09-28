@@ -1,6 +1,7 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
+import Search from "astro-pagefind/components/Search";
 ---
 
 <header>
@@ -12,7 +13,7 @@ import { SITE_TITLE } from '../consts';
 			<HeaderLink href="/about">About</HeaderLink>
 		</div>
 		<div class="social-links">
-			
+			<Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
 		</div>
 	</nav>
 </header>
